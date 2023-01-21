@@ -19,6 +19,10 @@ public class MovieServiceImpl implements MovieService {
 
         MovieEntity movieEntity = new MovieEntity();
         BeanUtils.copyProperties(movieDTO, movieEntity);
+        long leftLimit = 1L;
+        long rightLimit = 1000000L;
+        long generatedLong = leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
+        movieEntity.setId(generatedLong);
         var createdMovie = movieRepository.save(movieEntity);
         BeanUtils.copyProperties(createdMovie, movieDTO);
         return movieDTO;

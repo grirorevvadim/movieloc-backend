@@ -11,7 +11,6 @@ import lombok.Data;
 @Data
 public class MovieEntity {
     @Id
-    @GeneratedValue
     private long id;
 
     @Column ()
