@@ -14,9 +14,12 @@ public class MovieController {
     @Autowired
     MovieService movieService;
 
-    @GetMapping
-    public String getMovie() {
-        return "Movie";
+    @GetMapping(path = "/{id}")
+    public MovieModel getMovie(@PathVariable String id) {
+        MovieDTO movieDTO = movieService.getMovieById(id);
+        MovieModel result = new MovieModel();
+        BeanUtils.copyProperties(movieDTO,result);
+        return result;
     }
 
     @PostMapping

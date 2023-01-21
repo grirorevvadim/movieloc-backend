@@ -14,7 +14,7 @@ public class MovieEntity {
     @GeneratedValue
     private long id;
 
-    @Column
+    @Column ()
     private String movieName;
 
     @Column

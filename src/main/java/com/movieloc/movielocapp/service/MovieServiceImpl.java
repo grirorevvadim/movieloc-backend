@@ -14,10 +14,22 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO createMovie(MovieDTO movieDTO) {
+        if (movieRepository.findByMovieName(movieDTO.getMovieName()) != null)
+            throw new RuntimeException("Movie already exists");
+
         MovieEntity movieEntity = new MovieEntity();
         BeanUtils.copyProperties(movieDTO, movieEntity);
         var createdMovie = movieRepository.save(movieEntity);
         BeanUtils.copyProperties(createdMovie, movieDTO);
+        return movieDTO;
+    }
+
+    @Override
+    public MovieDTO getMovieById(String id) {
+        var movie = movieRepository.findById(Long.parseLong(id));
+        MovieDTO movieDTO = new MovieDTO();
+        if (movie.isEmpty()) throw new RuntimeException("Movie with id:" + id + " was not found");
+        BeanUtils.copyProperties(movie.get(), movieDTO);
         return movieDTO;
     }
 }
