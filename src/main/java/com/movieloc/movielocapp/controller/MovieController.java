@@ -5,24 +5,42 @@ import com.movieloc.movielocapp.model.MovieModel;
 import com.movieloc.movielocapp.service.MovieService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping("movies")
+@RequestMapping("/movies")
+@CrossOrigin("http://localhost:8080/")
 public class MovieController {
 
     @Autowired
     MovieService movieService;
 
+    @GetMapping()
+    public List<MovieModel> getAllMovies() {
+        List<MovieDTO> movies = movieService.getAll();
+        List<MovieModel> resultMovies = new ArrayList<>();
+        for (MovieDTO m : movies) {
+            MovieModel model = new MovieModel();
+            BeanUtils.copyProperties(m, model);
+            resultMovies.add(model);
+        }
+        return resultMovies;
+    }
+
     @GetMapping(path = "/{id}")
     public MovieModel getMovie(@PathVariable String id) {
         MovieDTO movieDTO = movieService.getMovieById(id);
         MovieModel result = new MovieModel();
-        BeanUtils.copyProperties(movieDTO,result);
+        BeanUtils.copyProperties(movieDTO, result);
         return result;
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public MovieModel createMovie(@RequestBody MovieModel movie) {
         MovieDTO movieDTO = new MovieDTO();
         MovieModel result = new MovieModel();

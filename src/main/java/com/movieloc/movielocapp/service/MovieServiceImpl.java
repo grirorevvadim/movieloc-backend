@@ -7,6 +7,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Service
 public class MovieServiceImpl implements MovieService {
     @Autowired
@@ -35,5 +39,18 @@ public class MovieServiceImpl implements MovieService {
         if (movie.isEmpty()) throw new RuntimeException("Movie with id:" + id + " was not found");
         BeanUtils.copyProperties(movie.get(), movieDTO);
         return movieDTO;
+    }
+
+    @Override
+    public List<MovieDTO> getAll() {
+        var movies = movieRepository.findAll();
+        List<MovieDTO> movieDTOS = new ArrayList<>();
+
+        for (MovieEntity movie : movieRepository.findAll()) {
+            MovieDTO m = new MovieDTO();
+            BeanUtils.copyProperties(movie, m);
+            movieDTOS.add(m);
+        }
+        return movieDTOS;
     }
 }
